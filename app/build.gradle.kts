@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.kapt)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -68,10 +70,14 @@ dependencies {
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+    implementation(libs.dagger.hilt.navigation)
 
     implementation(project(":foodies-data"))
     implementation(project(":foodies-api"))
     implementation(project(":features:foodies-main"))
 
     implementation(libs.okhttp.logging.interceptor)
+
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }
