@@ -1,5 +1,10 @@
 package com.nonoxy.foodies_main.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class ProductUI(
     val id: Long,
     val categoryID: Long,
@@ -15,7 +20,7 @@ data class ProductUI(
     val fatsPer100Grams: Float,
     val carbohydratesPer100Grams: Float,
     val tagIDS: List<Long>
-)
+) : Parcelable
 
 enum class MeasureUnitUI(val value: String) {
     GR("г")

@@ -1,6 +1,5 @@
 package com.nonoxy.foodies_main.products
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nonoxy.foodies.data.RequestResult
@@ -11,15 +10,14 @@ import com.nonoxy.foodies_main.models.TagUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ProductsMainViewModel @Inject constructor(
-    getFoodiesDataUseCase: GetFoodiesDataUseCase,
+class ProductsViewModel @Inject constructor(
+    private val getFoodiesDataUseCase: GetFoodiesDataUseCase,
 ) : ViewModel() {
 
     /*val state: StateFlow<ProductsScreenState> = getFoodiesDataUseCase.invoke()
@@ -29,6 +27,7 @@ internal class ProductsMainViewModel @Inject constructor(
     private val _state: MutableStateFlow<ProductsScreenState> =
         MutableStateFlow(ProductsScreenState.Loading)
     val state = _state.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -40,7 +39,20 @@ internal class ProductsMainViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedCategoryId(id: Long) {
+    fun onEvent(event: ProductsEvent) {
+        when (event) {
+            is ProductsEvent.ApplySelectedFilters -> applySelectedFilters()
+            is ProductsEvent.CategorySelected -> updateSelectedCategoryId(event.id)
+            is ProductsEvent.SearchTextChanged -> updateSearchText(event.newText)
+            is ProductsEvent.ToggleFilter -> toggleFilter()
+            is ProductsEvent.UpdateSelectedFilters -> updateSelectedFilters(
+                filter = event.filter,
+                isSelected = event.isSelected
+            )
+        }
+    }
+
+    private fun updateSelectedCategoryId(id: Long) {
         _state.update { currentState ->
             if (currentState is ProductsScreenState.Success) {
                 val newState = currentState.copy(selectedCategoryId = id)
@@ -51,7 +63,7 @@ internal class ProductsMainViewModel @Inject constructor(
         }
     }
 
-    fun updateSearchText(text: String) {
+    private fun updateSearchText(text: String) {
         _state.update { currentState ->
             if (currentState is ProductsScreenState.Success) {
                 val newState = currentState.copy(searchText = text)
@@ -62,7 +74,7 @@ internal class ProductsMainViewModel @Inject constructor(
         }
     }
 
-    fun toggleFilterOpen() {
+    private fun toggleFilter() {
         _state.update { currentState ->
             if (currentState is ProductsScreenState.Success) {
                 currentState.copy(isFilterOpen = !currentState.isFilterOpen)
@@ -72,7 +84,7 @@ internal class ProductsMainViewModel @Inject constructor(
         }
     }
 
-    fun onFilterDoneButton() {
+    private fun applySelectedFilters() {
         _state.update { currentState ->
             if (currentState is ProductsScreenState.Success) {
                 val newState = currentState.copy(isFilterOpen = !currentState.isFilterOpen)
@@ -83,7 +95,7 @@ internal class ProductsMainViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedFilters(filter: String, isSelected: Boolean) {
+    private fun updateSelectedFilters(filter: String, isSelected: Boolean) {
         _state.update { currentState ->
             if (currentState is ProductsScreenState.Success) {
                 currentState.copy(selectedFilters = currentState.selectedFilters.map {
@@ -133,7 +145,7 @@ private fun RequestResult<Triple<List<CategoryUI>, List<ProductUI>, List<TagUI>>
     }
 }
 
-internal sealed class ProductsScreenState {
+sealed class ProductsScreenState {
 
     data object Loading : ProductsScreenState()
     data object Error : ProductsScreenState()

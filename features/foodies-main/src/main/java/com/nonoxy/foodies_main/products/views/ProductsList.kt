@@ -1,8 +1,8 @@
 package com.nonoxy.foodies_main.products.views
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,11 +31,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nonoxy.foodies.main.R
+import com.nonoxy.foodies_main.cart.CartEvent
+import com.nonoxy.foodies_main.cart.CartState
 import com.nonoxy.foodies_main.models.ProductUI
 import com.nonoxy.foodies_main.models.TagUI
 
 @Composable
-internal fun ProductsList(products: List<ProductUI>, tags: List<TagUI>) {
+internal fun ProductsList(
+    products: List<ProductUI>,
+    tags: List<TagUI>,
+    cartState: CartState,
+    cartEvent: (CartEvent) -> Unit,
+    navigateToDetail: (ProductUI) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp),
@@ -54,6 +62,9 @@ internal fun ProductsList(products: List<ProductUI>, tags: List<TagUI>) {
                     ProductCard(
                         product = product,
                         tags = tags,
+                        cartState = cartState,
+                        event = cartEvent,
+                        navigateToDetail = navigateToDetail,
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
@@ -62,6 +73,9 @@ internal fun ProductsList(products: List<ProductUI>, tags: List<TagUI>) {
                         ProductCard(
                             product = products[index + 1],
                             tags = tags,
+                            cartState = cartState,
+                            event = cartEvent,
+                            navigateToDetail = navigateToDetail,
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight(),
@@ -79,12 +93,21 @@ internal fun ProductsList(products: List<ProductUI>, tags: List<TagUI>) {
 
 
 @Composable
-private fun ProductCard(product: ProductUI, tags: List<TagUI>, modifier: Modifier) {
+private fun ProductCard(
+    product: ProductUI,
+    tags: List<TagUI>,
+    cartState: CartState,
+    event: (CartEvent) -> Unit,
+    navigateToDetail: (ProductUI) -> Unit,
+    modifier: Modifier
+) {
     Box(
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.primaryContainer,
-            shape = RoundedCornerShape(8.dp)
-        )
+        modifier = modifier
+            .background(
+                MaterialTheme.colorScheme.primaryContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { navigateToDetail(product) }
     ) {
         Row(
             modifier = Modifier.padding(start = 8.dp, top = 8.dp),
@@ -129,33 +152,38 @@ private fun ProductCard(product: ProductUI, tags: List<TagUI>, modifier: Modifie
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .padding(12.dp)
-                    .fillMaxWidth()
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
-                    .height(40.dp),
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.textButtonColors(containerColor = MaterialTheme.colorScheme.background)
 
-            ) {
-                Text(
-                    text = "${product.priceCurrent / 100} ₽",
-                    style = MaterialTheme.typography.titleMedium.merge(lineHeight = 16.sp),
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-                if (product.priceOld != null) {
-                    Spacer(modifier = Modifier.width(8.dp))
+            if (!cartState.products.contains(product)) {
+                Button(
+                    onClick = { event(CartEvent.AddProduct(product)) },
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth()
+                        .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
+                        .height(40.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.textButtonColors(containerColor = MaterialTheme.colorScheme.background)
+
+                ) {
                     Text(
-                        text = "${product.priceOld / 100} ₽",
-                        style = MaterialTheme.typography.bodyMedium.merge(
-                            textDecoration = TextDecoration.LineThrough,
-                            lineHeight = 16.sp
-                        ),
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        text = "${product.priceCurrent / 100} ₽",
+                        style = MaterialTheme.typography.titleMedium.merge(lineHeight = 16.sp),
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
+                    if (product.priceOld != null) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "${product.priceOld / 100} ₽",
+                            style = MaterialTheme.typography.bodyMedium.merge(
+                                textDecoration = TextDecoration.LineThrough,
+                                lineHeight = 16.sp
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        )
+                    }
                 }
+            } else {
+
             }
         }
     }
