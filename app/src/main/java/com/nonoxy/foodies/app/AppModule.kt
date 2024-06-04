@@ -1,6 +1,7 @@
 package com.nonoxy.foodies.app
 
 import com.nonoxy.foodies.api.FoodiesApi
+import com.nonoxy.foodies_main.eventbus.EventBusController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,5 +35,11 @@ object AppModule {
             baseUrl = BuildConfig.FOOD_API_BASE_URL,
             okHttpClient = okHttpClient
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartEventBusController(): EventBusController {
+        return EventBusController()
     }
 }

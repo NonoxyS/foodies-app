@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.FoodiesApp" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Foodies.Starting" parent="Theme.SplashScreen" >
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.FoodiesApp</item>
+    </style>
 </resources>

@@ -6,4 +6,15 @@
     <string name="clear_input">Очистить ввод</string>
     <string name="back">Назад</string>
     <string name="done">Готово</string>
+    <string name="smthIsWrong">Что-то пошло не так...</string>
+    <string name="toCart">В корзину</string>
+    <string name="tag_vegan">Тэг - вегетерианское блюдо</string>
+    <string name="tag_discount">Тэг - со скидкой</string>
+    <string name="product_count_increase">Увеличить количество продукта</string>
+    <string name="product_count_decrease">Уменьшить количество продукта</string>
+    <string name="nothing_was_found">Ничего не нашлось :(</string>
+    <string name="empty_cart">Пусто, выберите блюда в каталоге :)</string>
+    <string name="cart">Корзина</string>
+    <string name="error_on_data_fetch">Ошибка на нашей стороне :(\nПопробуйте снова</string>
+    <string name="update">Обновить</string>
 </resources>

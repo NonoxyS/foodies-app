@@ -1,14 +1,18 @@
-package com.nonoxy.foodies_main.common
+package com.nonoxy.foodies_theme.ui.theme.common
 
 import android.graphics.BlurMaskFilter
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.DrawModifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.nonoxy.foodies_theme.ui.theme.entity.CustomShadowParams
+import com.nonoxy.foodies_theme.ui.theme.util.ComposeCompatShadowsRenderer
 
 fun Modifier.shadow(
     color: Color = Color.Black,
@@ -47,3 +51,27 @@ fun Modifier.shadow(
         }
     }
 )
+
+fun Modifier.roundRectShadow(
+    customShadowParams: CustomShadowParams,
+    cornerRadius: Dp
+) = this.then(ShadowDrawer(customShadowParams, cornerRadius))
+
+private class ShadowDrawer(
+    private val customShadowParams: CustomShadowParams,
+    private val cornerRadius: Dp
+) : DrawModifier {
+
+    private val composeCompatShadowsRenderer = ComposeCompatShadowsRenderer()
+
+    override fun ContentDrawScope.draw() {
+        customShadowParams.layers.forEach {
+            composeCompatShadowsRenderer.paintCompatShadow(
+                canvas = this,
+                outlineCornerRadius = cornerRadius.toPx(),
+                shadow = it
+            )
+        }
+        drawContent()
+    }
+}

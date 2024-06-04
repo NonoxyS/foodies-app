@@ -1,10 +1,12 @@
 package com.nonoxy.foodies_main.models
 
 import android.os.Parcelable
+import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
+@Stable
 data class ProductUI(
     val id: Long,
     val categoryID: Long,

@@ -53,10 +53,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
+    implementation(libs.kotlinx.immutableCollections)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(project(":foodies-data"))
+    implementation(project(":features:foodies-theme"))
 
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)

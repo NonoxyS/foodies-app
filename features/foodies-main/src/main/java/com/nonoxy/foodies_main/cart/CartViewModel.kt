@@ -2,73 +2,105 @@ package com.nonoxy.foodies_main.cart
 
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nonoxy.foodies_main.eventbus.EventBus
+import com.nonoxy.foodies_main.eventbus.EventBusController
 import com.nonoxy.foodies_main.models.ProductUI
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class CartViewModel @Inject constructor() : ViewModel() {
+class CartViewModel @Inject constructor(
+    private val eventBusController: EventBusController
+) : ViewModel() {
 
     private val _state = MutableStateFlow(CartState())
     val state = _state.asStateFlow()
 
-    fun onEvent(event: CartEvent) {
-        when (event) {
-            is CartEvent.AddProduct -> addProduct(event.product)
-            is CartEvent.DeleteProduct -> deleteProduct(event.product)
-            is CartEvent.DownProductCount -> changeProductCount(event.product, -1)
-            is CartEvent.UpProductCount -> changeProductCount(event.product, 1)
+    init {
+        viewModelScope.launch {
+            eventBusController.eventBus.collect { event ->
+                onEventBus(eventBus = event)
+            }
         }
     }
 
-    private fun addProduct(product: ProductUI) {
-        _state.update { currentState ->
-            if (!currentState.products.contains(product)) {
-                currentState.copy(
-                    products = currentState.products.also { it[product] = 1 },
-                    totalPrice = currentState.totalPrice + product.priceCurrent
-                )
-            } else currentState
-        }
-    }
-
-    private fun deleteProduct(product: ProductUI) {
-        _state.update { currentState ->
-            val updatedProducts = currentState.products
-            val updatedTotalPrice =
-                currentState.totalPrice - (product.priceCurrent * currentState.products.getOrDefault(
-                    product, 0))
-
-            updatedProducts.remove(product)
-
-            currentState.copy(
-                products = updatedProducts,
-                totalPrice = updatedTotalPrice
+    private fun onEventBus(eventBus: EventBus) {
+        when (eventBus) {
+            is EventBus.ChangeProductsInCart -> changeProductsInCart(
+                products = eventBus.products
             )
         }
     }
 
-    private fun changeProductCount(product: ProductUI, delta: Int) {
-        _state.update { currentState ->
-            val updatedProducts = currentState.products
-            val newCount = (currentState.products[product] ?: 0) + delta
+    fun onEvent(event: CartEvent) {
+        when (event) {
+            is CartEvent.DeleteProduct -> {
+                viewModelScope.launch(Dispatchers.Default) {
+                    val updatedProductsInCart = state.value.products
+                    updatedProductsInCart.remove(event.product)
 
-            if (newCount > 0) updatedProducts[product] = newCount
-            else updatedProducts.remove(product)
+                    withContext(Dispatchers.Main) {
+                        eventBusController.publishEvent(
+                            EventBus.ChangeProductsInCart(products = updatedProductsInCart)
+                        )
+                    }
+                }
+            }
 
-            if (delta < 0) {
-                currentState.copy(
-                    products = updatedProducts,
-                    totalPrice = currentState.totalPrice - product.priceCurrent
-                )
-            } else {
-                currentState.copy(
-                    products = updatedProducts,
-                    totalPrice = currentState.totalPrice + product.priceCurrent
-                )
+            is CartEvent.DownProductCount -> {
+                viewModelScope.launch(Dispatchers.Default) {
+                    val updatedProductsInCart = state.value.products
+                    if ((state.value.products[event.product] ?: 0) - 1 > 0) {
+                        updatedProductsInCart[event.product] =
+                            (state.value.products[event.product] ?: 0) - 1
+                    } else {
+                        updatedProductsInCart.remove(event.product)
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        eventBusController.publishEvent(
+                            EventBus.ChangeProductsInCart(products = updatedProductsInCart)
+                        )
+                    }
+                }
+            }
+
+            is CartEvent.UpProductCount -> {
+                viewModelScope.launch(Dispatchers.Default) {
+                    val updatedProductsInCart = state.value.products
+                    updatedProductsInCart[event.product] =
+                        (state.value.products[event.product] ?: 0) + 1
+
+                    withContext(Dispatchers.Main) {
+                        eventBusController.publishEvent(
+                            EventBus.ChangeProductsInCart(products = updatedProductsInCart)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun changeProductsInCart(products: MutableMap<ProductUI, Int>) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val updatedTotalPrice = products.map { (product, countInCart) ->
+                product.priceCurrent * countInCart
+            }.sum()
+
+            withContext(Dispatchers.Main) {
+                _state.update { currentState ->
+                    currentState.copy(
+                        products = products,
+                        totalPrice = updatedTotalPrice
+                    )
+                }
             }
         }
     }

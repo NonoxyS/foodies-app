@@ -23,7 +23,11 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "FOOD_API_BASE_URL", "\"https://anika1d.github.io/WorkTestServer/\"")
+        buildConfigField(
+            "String",
+            "FOOD_API_BASE_URL",
+            "\"https://anika1d.github.io/WorkTestServer/\""
+        )
     }
 
     buildTypes {
@@ -33,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -75,9 +80,19 @@ dependencies {
     implementation(project(":foodies-data"))
     implementation(project(":foodies-api"))
     implementation(project(":features:foodies-main"))
+    implementation(project(":features:foodies-theme"))
 
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.splash.screen)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:experimentalStrongSkipping=true",
+    )
 }
