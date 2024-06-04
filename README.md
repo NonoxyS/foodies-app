@@ -4,21 +4,19 @@
 
 </div>
 
+* The API does not provide links to product images, so they have been hardcoded
+
 ## Screenshots - Light Theme
 
-![](imgur.com/xBsThWT.png)
-![](imgur.com/3K5xA1t.png)
-![](imgur.com/4jHDaLC.png)
-![](imgur.com/tJQBpof.png)
-![](imgur.com/dmXC7KQ.png)
-![](imgur.com/khoO8Tr.png)
+<img src="https://i.imgur.com/xBsThWT.png" width="300"> <img src="https://i.imgur.com/3K5xA1t.png" width="300"> <img src="https://i.imgur.com/4jHDaLC.png" width="300">
+
+<img src="https://i.imgur.com/tJQBpof.png" width="300"> <img src="https://i.imgur.com/dmXC7KQ.png" width="300"> <img src="https://i.imgur.com/khoO8Tr.png" width="300">
 
 ## Screenshots - Dark Theme
 
-![](imgur.com/4goWwNE.png)
-![](imgur.com/mMTI0Yb.png)
-![](imgur.com/v1wJtr3.png)
-![](imgur.com/qA1UIQQ.png)
+<img src="https://i.imgur.com/4goWwNE.png" width="300"> <img src="https://i.imgur.com/mMTI0Yb.png" width="300"> <img src="https://i.imgur.com/UXVkLzL.png" width="300"> 
+
+<img src="https://i.imgur.com/sMfdgbC.png" width="300"> <img src="https://i.imgur.com/v1wJtr3.png" width="300"> <img src="https://i.imgur.com/qA1UIQQ.png" width="300">
 
 ## Built with
 
