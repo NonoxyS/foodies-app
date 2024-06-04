@@ -127,7 +127,7 @@ fun CartScreen(
                 )
             ) {
                 Text(
-                    text = "${state.totalPrice / 100} ₽",
+                    text = "Заказать за ${state.totalPrice / 100} ₽",
                     style = MaterialTheme.typography.titleMedium.copy(lineHeight = 16.sp)
                 )
             }
@@ -353,7 +353,8 @@ private fun CartScreenPreview() {
                             carbohydratesPer100Grams = 19.7f,
                             tagIDS = listOf()
                         ) to 1
-                    )
+                    ),
+                    totalPrice = 1920 * 100
                 ),
                 event = {},
                 navigateUp = {}
