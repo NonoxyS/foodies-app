@@ -8,15 +8,15 @@
 
 ## Screenshots - Light Theme
 
-<img src="https://i.imgur.com/xBsThWT.png" width="300"> <img src="https://i.imgur.com/3K5xA1t.png" width="300"> <img src="https://i.imgur.com/4jHDaLC.png" width="300">
+<img src="https://i.imgur.com/xBsThWT.png" width="200"> <img src="https://i.imgur.com/3K5xA1t.png" width="200"> <img src="https://i.imgur.com/4jHDaLC.png" width="200">
 
-<img src="https://i.imgur.com/tJQBpof.png" width="300"> <img src="https://i.imgur.com/dmXC7KQ.png" width="300"> <img src="https://i.imgur.com/khoO8Tr.png" width="300">
+<img src="https://i.imgur.com/tJQBpof.png" width="200"> <img src="https://i.imgur.com/dmXC7KQ.png" width="200"> <img src="https://i.imgur.com/khoO8Tr.png" width="200">
 
 ## Screenshots - Dark Theme
 
-<img src="https://i.imgur.com/4goWwNE.png" width="300"> <img src="https://i.imgur.com/mMTI0Yb.png" width="300"> <img src="https://i.imgur.com/UXVkLzL.png" width="300"> 
+<img src="https://i.imgur.com/4goWwNE.png" width="200"> <img src="https://i.imgur.com/mMTI0Yb.png" width="200"> <img src="https://i.imgur.com/UXVkLzL.png" width="200"> 
 
-<img src="https://i.imgur.com/sMfdgbC.png" width="300"> <img src="https://i.imgur.com/v1wJtr3.png" width="300"> <img src="https://i.imgur.com/qA1UIQQ.png" width="300">
+<img src="https://i.imgur.com/sMfdgbC.png" width="200"> <img src="https://i.imgur.com/v1wJtr3.png" width="200"> <img src="https://i.imgur.com/qA1UIQQ.png" width="200">
 
 ## Built with
 
